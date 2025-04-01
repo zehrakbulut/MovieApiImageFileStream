@@ -1,0 +1,17 @@
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.exe
+*.dll
+*.pdb
+*.localhistory/
+*.vscode/
+node_modules/
+packages/
+project.lock.json
+.DS_Store
+Thumbs.db
