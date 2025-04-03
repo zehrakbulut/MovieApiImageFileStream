@@ -17,7 +17,6 @@ namespace MovieApiImageFileStream.Controllers
 			_environment = environment;
 		}
 
-		// 📌 1️⃣ Resim Yükleme
 		[HttpPost("{movieId}/upload")]
 		public async Task<IActionResult> UploadImage(int movieId, IFormFile file, bool isCover = false)
 		{
@@ -57,14 +56,12 @@ namespace MovieApiImageFileStream.Controllers
 			return Ok(new { message = "Resim yüklendi!", filePath = movieImage.FilePath });
 		}
 
-		// 📌 2️⃣ Tüm Resimleri Listeleme
 		[HttpGet("all")]
 		public async Task<ActionResult<IEnumerable<MovieImage>>> GetAllImages()
 		{
 			return await _context.MoviesImages.ToListAsync();
 		}
 
-		// 📌 3️⃣ Belirli Bir Filmin Tüm Resimlerini Listeleme
 		[HttpGet("movie/{movieId}")]
 		public async Task<ActionResult<IEnumerable<MovieImage>>> GetImagesByMovie(int movieId)
 		{
@@ -72,7 +69,6 @@ namespace MovieApiImageFileStream.Controllers
 			return images.Any() ? Ok(images) : NotFound(new { message = "Bu filme ait resim bulunamadı." });
 		}
 
-		// 📌 4️⃣ Tek Bir Resmi Getirme
 		[HttpGet("get/{imageId}")]
 		public async Task<IActionResult> GetImage(int imageId)
 		{
@@ -85,10 +81,9 @@ namespace MovieApiImageFileStream.Controllers
 				return NotFound(new { message = "Dosya bulunamadı." });
 
 			var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-			return File(fileBytes, "image/jpeg"); // PNG de olabilir
+			return File(fileBytes, "image/jpeg"); 
 		}
 
-		// 📌 5️⃣ Resim Güncelleme (Yeniden Yükleme)
 		[HttpPut("update/{imageId}")]
 		public async Task<IActionResult> UpdateImage(int imageId, IFormFile file, bool isCover = false)
 		{
@@ -124,7 +119,6 @@ namespace MovieApiImageFileStream.Controllers
 			return Ok(new { message = "Resim güncellendi!", filePath = movieImage.FilePath });
 		}
 
-		// 📌 6️⃣ Resim Silme
 		[HttpDelete("delete/{imageId}")]
 		public async Task<IActionResult> DeleteImage(int imageId)
 		{
