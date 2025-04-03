@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MovieApiImageFileStream.Dtos;
 using MovieApiImageFileStream.Models.Tables;
 
 namespace MovieApiImageFileStream.Controllers
@@ -57,16 +58,33 @@ namespace MovieApiImageFileStream.Controllers
 		}
 
 		[HttpGet("all")]
-		public async Task<ActionResult<IEnumerable<MovieImage>>> GetAllImages()
+		public async Task<ActionResult<IEnumerable<MovieImageDto>>> GetAllImages()
 		{
-			return await _context.MoviesImages.ToListAsync();
+			var images = await _context.MoviesImages.ToListAsync();
+
+			var imageDtos = images.Select(img => new MovieImageDto
+			{
+				MovieImageId = img.Id,
+				FilePath = img.FilePath,
+				IsCover = img.IsCover
+			}).ToList();
+
+			return Ok(imageDtos);
 		}
 
 		[HttpGet("movie/{movieId}")]
-		public async Task<ActionResult<IEnumerable<MovieImage>>> GetImagesByMovie(int movieId)
+		public async Task<ActionResult<IEnumerable<MovieImageDto>>> GetImagesByMovie(int movieId)
 		{
 			var images = await _context.MoviesImages.Where(img => img.MovieId == movieId).ToListAsync();
-			return images.Any() ? Ok(images) : NotFound(new { message = "Bu filme ait resim bulunamadı." });
+
+			var imageDtos = images.Select(img => new MovieImageDto
+			{
+				MovieImageId = img.Id,
+				FilePath = img.FilePath,
+				IsCover = img.IsCover
+			}).ToList();
+
+			return images.Any() ? Ok(imageDtos) : NotFound(new { message = "Bu filme ait resim bulunamadı." });
 		}
 
 		[HttpGet("get/{imageId}")]
